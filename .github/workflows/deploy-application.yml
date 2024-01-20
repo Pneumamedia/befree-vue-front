@@ -1,0 +1,182 @@
+name: Deploy Vue Application
+
+on:
+  push:
+    branches:
+      - dev
+      - production
+
+jobs:
+  create-deployment-artifacts:
+    name: Create deployment artifacts
+    runs-on: ubuntu-latest
+    outputs: 
+      deployment-matrix: ${{steps.export-deployment-matrix.outputs.deployment-matrix}}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Compile CSS and Javascript
+        run: |
+          npm install
+          npm run build
+
+      # - name: Configure PHP 8.0
+      #   uses: shivammathur/setup-php@master
+      #   with:
+      #     php-version: 8.0
+      #     extensions: mbstring, ctype, fileinfo, PDO, bcmath, tokenizer, json, xml
+
+      # - name: Install Composer Dependencies
+      #   run: composer update --no-dev --no-interaction --prefer-dist
+
+      - name: Create Deployment Artifacts
+        env: 
+          GITHUB_SHA: ${{github.sha}}
+        run: tar -czf "${GITHUB_SHA}".tar.gz dist/ --exclude=*.git --exclude=node_modules *
+
+      - name: Store artifacts for distribution
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-build
+          path: ${{github.sha}}.tar.gz
+
+      - name: Export deployment matrix
+        id: export-deployment-matrix
+        run: |
+          JSON="$(cat ./deployment-config.json)"
+          JSON="${JSON//'%'/'%25'}"
+          JSON="${JSON//$'\n'/'%0A'}"
+          JSON="${JSON//$'\r'/'%0D'}"
+
+          echo "::set-output name=deployment-matrix::$JSON"
+
+  preparing-release-on-server:
+    runs-on: ubuntu-latest
+    needs: create-deployment-artifacts
+    strategy:
+      matrix:
+        server: ${{ fromJson(needs.create-deployment-artifacts.outputs.deployment-matrix) }}
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: app-build
+      - name: upload
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{matrix.server.ip}}
+          username: ${{matrix.server.username}}
+          password: ${{matrix.server.password}}
+          source: ${{github.sha}}.tar.gz
+          target: ${{matrix.server.path}}/artifacts
+      - name: Extract archive and create directories
+        uses: appleboy/ssh-action@master
+        env:
+          GITHUB_SHA: ${{github.sha}}
+        with:
+          host: ${{matrix.server.ip}}
+          username: ${{matrix.server.username}}
+          password: ${{matrix.server.password}}
+          port: ${{matrix.server.port}}
+          script: |
+            mkdir -p "${{matrix.server.path}}/releases/${{github.sha}}"
+            tar -xzf "${{matrix.server.path}}/artifacts/${{github.sha}}".tar.gz -C "${{matrix.server.path}}/releases/${{github.sha}}"
+
+  run-before-hooks:
+    name: "${{matrix.server.name}}: Before hook"
+    runs-on: ubuntu-latest
+    needs: [create-deployment-artifacts, preparing-release-on-server]
+    strategy:
+      matrix:
+        server: ${{ fromJson(needs.create-deployment-artifacts.outputs.deployment-matrix) }}
+    steps:
+      - name: Run before hooks
+        uses: appleboy/ssh-action@master
+        env:
+          GITHUB_SHA: ${{github.sha}}
+          RELEASE_PATH: ${{matrix.server.path}}/releases/${{github.sha}}
+          ACTIVE_RELEASE_PATH: ${{matrix.server.path}}/current
+         # STORAGE_PATH: ${{matrix.server.path}}/storage
+          BASE_PATH: ${{matrix.server.path}}
+        with:
+          host: ${{matrix.server.ip}}
+          username: ${{matrix.server.username}}
+          password: ${{matrix.server.password}}
+          port: ${{matrix.server.port}}
+          envs: GITHUB_SHA,RELEASE_PATH,ACTIVE_RELEASE_PATH,BASE_PATH
+          script: |
+            ${{matrix.server.beforeHook}}
+
+  activate-release:
+    name: "${{matrix.server.name}}: Activate release"
+    runs-on: ubuntu-latest
+    needs: [create-deployment-artifacts, preparing-release-on-server, run-before-hooks]
+    strategy:
+      matrix:
+        server: ${{ fromJson(needs.create-deployment-artifacts.outputs.deployment-matrix) }}
+    steps:
+      - name: Activate release
+        uses: appleboy/ssh-action@master
+        env:
+          GITHUB_SHA: ${{github.sha}}
+          RELEASE_PATH: ${{matrix.server.path}}/releases/${{github.sha}}
+          ACTIVE_RELEASE_PATH: ${{matrix.server.path}}/current
+          #STORAGE_PATH: ${{matrix.server.path}}/storage
+          BASE_PATH: ${{matrix.server.path}}
+          VUE_ENV: ${{secrets.VUE_ENV}}
+        with:
+          host: ${{matrix.server.ip}}
+          username: ${{matrix.server.username}}
+          password: ${{matrix.server.password}}
+          port: ${{matrix.server.port}}
+          envs: GITHUB_SHA, RELEASE_PATH, ACTIVE_RELEASE_PATH, BASE_PATH, VUE_ENV
+          script: |
+            ln -s -n -f $RELEASE_PATH $ACTIVE_RELEASE_PATH
+            service nginx reload
+
+  run-after-hooks:
+    name: "${{matrix.server.name}}: After hook"
+    runs-on: ubuntu-latest
+    needs: [create-deployment-artifacts, preparing-release-on-server, activate-release]
+    strategy:
+      matrix:
+        server: ${{ fromJson(needs.create-deployment-artifacts.outputs.deployment-matrix) }}
+    steps:
+      - name: Run before hooks
+        uses: appleboy/ssh-action@master
+        env:
+          GITHUB_SHA: ${{github.sha}}
+          RELEASE_PATH: ${{matrix.server.path}}/releases/${{github.sha}}
+          ACTIVE_RELEASE_PATH: ${{matrix.server.path}}/current
+         # STORAGE_PATH: ${{matrix.server.path}}/storage
+          BASE_PATH: ${{matrix.server.path}}
+        with:
+          host: ${{matrix.server.ip}}
+          username: ${{matrix.server.username}}
+          password: ${{matrix.server.password}}
+          port: ${{matrix.server.port}}
+          envs: GITHUB_SHA,RELEASE_PATH,ACTIVE_RELEASE_PATH,BASE_PATH
+          script: |
+            ${{matrix.server.afterHook}}
+
+  clean-up:
+    name: "${{matrix.server.name}}: clean up"
+    runs-on: ubuntu-latest
+    needs: [create-deployment-artifacts, preparing-release-on-server, activate-release, run-after-hooks]
+    strategy:
+      matrix:
+        server: ${{ fromJson(needs.create-deployment-artifacts.outputs.deployment-matrix) }}
+    steps:
+      - name: Run before hooks
+        uses: appleboy/ssh-action@master
+        env:
+          RELEASE_PATH: ${{matrix.server.path}}/releases/${{github.sha}}
+          ARTIFACT_PATH: ${{matrix.server.path}}/artifacts
+        with:
+          host: ${{matrix.server.ip}}
+          username: ${{matrix.server.username}}
+          password: ${{matrix.server.password}}
+          port: ${{matrix.server.port}}
+          envs: ARTIFACT_PATH,RELEASE_PATH
+          script: |
+            cd $RELEASE_PATH && ls -t -1 | tail -n +6 | xargs rm -rf
+            cd $ARTIFACT_PATH && ls -t -1 | tail -n +6 | xargs rm -rf
