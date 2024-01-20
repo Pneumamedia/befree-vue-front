@@ -50,6 +50,11 @@
                             <i class="icon icon-wallet blue-text s-18"></i><span class="blue-text">Wallet</span> 
                         </router-link>
                     </li>
+                    <li :class="['treeview', activeMenu()=='crypto-wallets' ? 'active' : '']" @click="setMenu('crypto-wallets')">
+                        <router-link :to="{name:'crypto-wallets'}" >
+                            <i class="icon icon-dollar blue-text s-18"></i><span class="blue-text">Crypto Wallets</span> 
+                        </router-link>
+                    </li>
                     <li :class="['treeview', activeMenu()=='user-virtual-card' ? 'active' : '']" @click="setMenu('user-virtual-card')">
                         <router-link :to="{name:'user-virtual-card'}">
                             <i class="icon icon-account_balance_wallet blue-text s-18"></i> <span class="blue-text">Cards</span>
@@ -130,17 +135,22 @@
 
 <script>
 import modal from '@/components/Modal'
-import {mapActions} from 'vuex'
+import {mapActions,mapGetters} from 'vuex'
 export default {
     components:{
         modal
     },
 
     computed:{
-        
+        ...mapGetters('authStore',['authUser'])
     },
 
     created(){
+        //console.log(this.authUser.data.user_uuid)
+        if(this.authUser.user_uuid == undefined){
+            this.getUser()
+        }
+
         const pageArr = location.pathname.split('/')
         let activeMenu = pageArr[1]+'-'+pageArr[2]
        this.setMenu(activeMenu)
@@ -150,7 +160,7 @@ export default {
     },
 
     methods:{
-        ...mapActions('authStore',['logOut']),
+        ...mapActions('authStore',['logOut','getUser']),
 
         setMenu(menu){
             this.$store.state.activeMenu = menu

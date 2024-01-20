@@ -71,4 +71,14 @@ export default {
         return http().get(`${endPoints.virtualCards}/status/${data.status}?page=${data.page}`)
     },
 
+    //admin block card
+    block(cardId){
+        return http().patch(`${endPoints.virtualCards}/${cardId}/block`)
+    },
+
+    //admin unblock card
+    unblock(cardId){
+        return http().patch(`${endPoints.virtualCards}/${cardId}/unblock`)
+    },
+
 }

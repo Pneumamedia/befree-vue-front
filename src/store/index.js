@@ -10,6 +10,7 @@ import serviceProviderStore from "./service-provider-store";
 import productServiceStore from "./product-service-store";
 import chargeStore from "./charge-store";
 import conversionRateStore from "./conversion-rate-store";
+import cryptoWalletStore from "./crypto-wallet-store";
 
 Vue.use(Vuex)
 
@@ -47,6 +48,7 @@ export default new Vuex.Store({
     serviceProviderStore,
     productServiceStore,
     chargeStore,
-    conversionRateStore
+    conversionRateStore,
+    cryptoWalletStore
   }
 })

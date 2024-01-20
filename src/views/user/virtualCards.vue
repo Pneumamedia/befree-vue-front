@@ -17,33 +17,34 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card mb-2">
-                    <div class="card-header white">
-                        <strong> Cards Analysis </strong>
+                <div class="card text-white bg-primary mb-1 no-b">
+                    <div class="card-header"><b>NOTE!!!</b></div>
+                    <div class="card-body text-sm">
+                        <ol :style="{'list-style-type':'disc'}">
+                            <li>
+                                You will be charged a fee for funding your card
+                            </li>
+                            <li>
+                                You will be charged a fee for liquidating your card
+                            </li>
+                            <li>
+                                You cannot terminate a liquidating card
+                            </li>
+                            <li>
+                                You cannot fund a liquidating card
+                            </li>
+                            <li>
+                                You cannot revive a terminated card
+                            </li>
+                            <li>
+                                You will be charged a monthly fee for card maintenance
+                            </li>
+                        </ol>
                     </div>
-                    <div class="card-body p-0">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
-                                <i class="icon icon-plus-square text-blue"></i> Total Cards
-                                <span class="float-right btn btn-primary btn-sm p-1">{{userVirtualCards.length}}</span>
-                            </li>
-                            <li class="list-group-item">
-                                <i class="icon icon-multiline_chart text-yellow"></i>Total Transactions
-                                <span class="float-right btn btn-warning btn-sm p-1">{{userVirtualCardTransactions.length}}</span>
-                            </li>
-                            <li class="list-group-item">
-                                <i class="icon icon-home text-purple"></i>Total Card Balance
-                                <span class="float-right btn btn-warning btn-sm p-1">{{userVirtualCardTransactions.length}}</span>
-                            </li>
-                            <li class="list-group-item">
-                                <i class="icon icon-home text-red"></i>Highest Balance
-                                <span class="float-right btn btn-primary btn-sm p-1">{{userVirtualCards.length}}</span>
-                            </li>
-                            <li class="list-group-item">
-                                <i class="icon icon-home text-green"></i>Lowest Balance
-                                <span class="float-right btn btn-primary btn-sm p-1">{{userVirtualCards.length}}</span>
-                            </li>
-                        </ul>
+                    <div class="card-footer p-1">
+                        <div class="col-sm-12">
+                            <!-- <button class="btn btn-sm bg-white float-right">Learn more here</button> -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -66,7 +67,7 @@
                 
                 <div class="card" id="profile" role="tabpanel">
                     <div class="card-header">
-                        <h4>Virtual Cards</h4>
+                        <h5>Virtual Cards</h5>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -85,7 +86,7 @@
                                     <th>Actions</th>
                                 </tr> 
                                 
-                                <tr v-if="loading">
+                                <tr v-if="vCardLoading">
                                     <td colspan="10">
                                         <b-skeleton-table
                                             :rows="5"
@@ -135,7 +136,7 @@
         </modal> -->
 
         <modal :modalId="'cardDetails'" :modalTitle="'Card Details'" :modalSize="'xl'">
-            <template v-if="!card">
+            <template v-if="card==null">
                 <b-skeleton-table
                     :rows="5"
                     :columns="9"
@@ -172,7 +173,9 @@
         },
         data(){
             return {
-                card:null
+                card:null,
+                vCardLoading:false,
+                transLoading:false,
             }
         },
 
@@ -201,27 +204,30 @@
             })
 
             //if(this.profile == null || Object.entries(this.profile).length == 0){
-                this.getProfileDetails().then(res=>{
-                    if(!res.data.data){
-                        this.$router.push({name:'user-profile'})
-                        notification.warning("You need to update your profile to contiue")
-                        return
-                    }
+                this.getProfileDetails().then({
+                    // if(!res.data.data){
+                    //     this.$router.push({name:'user-profile'})
+                    //     notification.warning("You need to update your profile to contiue")
+                    //     return
+                    // }
                     
-                    if(res.data.data.status !== 'approved'){
-                        this.$router.push({name:'user-profile'})
-                        notification.warning("Your profile is not yet approved")
-                        return
-                    }
+                    // if(res.data.data.status !== 'approved'){
+                    //     this.$router.push({name:'user-profile'})
+                    //     notification.warning("Your profile is not yet approved")
+                    //     return
+                    // }
                 })
             //}
 
             if(this.userVirtualCards.length == 0){
-                this.getUserCards()
+                this.vCardLoading =true
+                this.getUserCards().then(()=>{
+                    this.vCardLoading = false
+                })
             }
             
             if(this.userVirtualCardTransactions.length == 0){
-                this.getUserVirtualCardTransactions()
+                //this.getUserVirtualCardTransactions()
             }
         }, 
         

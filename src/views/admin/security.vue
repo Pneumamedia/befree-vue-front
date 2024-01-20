@@ -76,7 +76,7 @@
 <script>
 import {mapActions,mapState,mapGetters} from 'vuex'
 export default {
-    name:'user-security',
+    name:'admin-security',
     data(){
         return{
             form:{
@@ -98,7 +98,7 @@ export default {
         ...mapState({
             submitting:state=>state.submitting
         }),
-        ...mapGetters('authStore',['authUser']),
+        ...mapGetters('authStore',['adminAuth']),
     },
     
     methods:{
@@ -115,15 +115,15 @@ export default {
     },
 
     created(){
-        if(Object.entries(this.authUser).length == 0){
+        if(Object.entries(this.adminAuth).length == 0){
             var that = this
-            this.getUser().then(function(res){
+            this.getAdmin().then(function(res){
                 that.form.email = res.data.email
                 that.changeForm.email = res.data.email
             })
         }else{
-            this.changeForm.email = this.authUser.email
-            this.form.email = this.authUser.email
+            this.changeForm.email = this.adminAuth.email
+            this.form.email = this.adminAuth.email
         }
     }
 }

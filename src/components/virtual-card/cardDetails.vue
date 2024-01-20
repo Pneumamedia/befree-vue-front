@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="card.status=='blocked'" class="row">
+        <div v-if="card.is_blocked==1" class="row">
             <div class="col-md-12">
                 <div class="alert alert-danger">
                     This Card has been Blocked. Please reachout to surpport for more details
@@ -21,12 +21,12 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="row">
-                            <div class="col-md-6">
+                            <!-- <div class="col-md-6">
                                 <div class="card mb-2">
                                     <img src="/assets/img/virtual-card.jpg" class="img-responsive" height="340">
                                 </div>
-                            </div>
-                            <div class="col-md-6">
+                            </div> -->
+                            <div class="col-md-12">
                                 <div class="card text-white bg-primary mb-1 no-b">
                                     <div class="card-header"><b>NOTE!!!</b></div>
                                     <div class="card-body text-sm">
@@ -53,7 +53,7 @@
                                     </div>
                                     <div class="card-footer p-1">
                                         <div class="col-sm-12">
-                                            <button class="btn btn-sm bg-white float-right">Learn more here</button>
+                                            <!-- <button class="btn btn-sm bg-white float-right">Learn more here</button> -->
                                         </div>
                                     </div>
                                 </div>
@@ -91,7 +91,7 @@
                             <div class="col-md-6">
                                 <div class="card mb-2" id="incentive">
                                     <div class="card-header">
-                                        Liquidate Card
+                                        Liquidate(Withdraw) Card
                                     </div>
                                     <div class="card-body">
                                         <form class="form-horizontal form-materia" id="liquidate-card-form"  @submit.prevent="liquidateCard()">
@@ -119,11 +119,11 @@
                             <div class="card-header ">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <button :disabled="card.liquidating==1 || card.status=='blocked'" v-if="virtualCardDetails.status == 'frozen'" @click="unFreezeCard()" class="btn btn-warning">Un Freeze Card</button>
-                                        <button :disabled="card.liquidating==1 || card.status=='blocked'" v-else @click="freezeCard()" class="btn btn-warning">Freeze Card</button>
+                                        <button :disabled="card.liquidating==1 || card.status=='blocked' || submitting==true" v-if="virtualCardDetails.status == 'frozen'" @click="unFreezeCard()" class="btn btn-warning">Un Freeze Card</button>
+                                        <button :disabled="card.liquidating==1 || card.status=='blocked' || submitting==true" v-else @click="freezeCard()" class="btn btn-warning">Freeze Card</button>
                                     </div>
                                     <div class="col-md-6">
-                                        <button :disabled="card.liquidating==1 || card.status=='blocked'" @click="terminateCard()" class="btn btn-danger float-right">Terminate Card</button>
+                                        <button :disabled="card.liquidating==1 || card.status=='blocked' || submitting==true" @click="terminateCard()" class="btn btn-danger float-right">Terminate Card</button>
                                     </div>
                                 </div>
                             </div>
@@ -132,7 +132,15 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="card mb-2" :style="{'background-color':virtualCardDetails.design_code +'!important' }">
+                <b-card v-if="vCardLoading">
+                    <b-skeleton animation="throb" width="85%"></b-skeleton>
+                    <b-skeleton animation="throb" width="55%"></b-skeleton>
+                    <b-skeleton animation="throb" width="70%"></b-skeleton>
+                    <b-skeleton animation="throb" width="85%"></b-skeleton>
+                    <b-skeleton animation="throb" width="55%"></b-skeleton>
+                    <b-skeleton animation="throb" width="70%"></b-skeleton>
+                </b-card>
+                <div v-else class="card mb-2" :style="{'background-color':virtualCardDetails.design_code +'!important' }">
                     <div class="card-header text-white">
                         <strong> Cards Details </strong>
                     </div>
@@ -203,7 +211,7 @@
                                 </tr> 
                                 
                                 <tr v-if="loading">
-                                    <td colspan="5">
+                                    <td colspan="6">
                                         <b-skeleton-table
                                             :rows="3"
                                             :columns="6"
@@ -213,7 +221,7 @@
                                 </tr>
                                 <template v-else>
                                     <tr v-if="transactions.length == 0">
-                                        <td colspan="7">There are no virtual card transactions</td>
+                                        <td colspan="6">There are no virtual card transactions</td>
                                     </tr>
                                     <template v-else>
                                         <tr v-for="transaction,i in transactions" :key="i">
@@ -255,11 +263,12 @@ export default {
             type:Boolean,
             default:false,
             required:false
-        }
+        },
     },
     data(){
         return {
-            
+            vCardLoading:false,
+            transLoading:false,
         }
     },
 
@@ -276,8 +285,16 @@ export default {
     created(){
         //console.log('card-details',this.card)
         if(this.card){
-            this.getCardDetails(this.card.reference)
-            this.getTransactions(this.card.reference)
+            //this.virtualCardDetails = this.card
+            this.vCardLoading = true
+            this.transLoading = true
+            this.getCardDetails(this.card.reference).then(()=>{
+                this.vCardLoading = false
+            })
+
+            this.getTransactions(this.card.reference).then(()=>{
+                this.transLoading = false
+            })
         }
     },
 

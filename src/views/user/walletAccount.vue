@@ -4,7 +4,7 @@
             <div class="col-md-12">
                 <div class="card mb-3">
                     <div class="card-header">
-                        <h4>BFREE Wallet Account System</h4>
+                        <h5>BFREE Wallet Account System</h5>
                     </div>
                 </div>
             </div>
@@ -96,8 +96,18 @@
                     <div class="card-header">
                         <strong>{{walletAccount ? 'Fund Wallet' : 'Create & Fund Wallet'}}</strong>
                     </div>
-                    <div class="card-body p-1">
-                        <fund-wallet  @wallet-funded="getUserWalletDetails()"/>
+                    <div class="card-body text-white bg-primary p-2">
+                        <h5 class="card-title">NOTE !!!</h5>
+                        <p class="card-text">
+                            Create or copy your crypto wallet address to
+                            fund your USD wallet.
+                        </p>
+                        <div class="card-footer p-1">
+                            <div class="col-sm-12">
+                                <button class="btn btn-sm bg-white float-left mb-2" v-b-modal.cryptoWalletInfoModal>Instruction</button>
+                                <button class="btn btn-sm bg-white float-right mb-2" v-b-modal.cryptoWalletModal>Create Crypto Address</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -107,7 +117,7 @@
 
         <div class="card" id="profile" role="tabpanel">
             <div class="card-header">
-                <h4>Wallet Transactions</h4>
+                <h6>Wallet Transactions</h6>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -155,8 +165,32 @@
             </div>
         </div>
 
-        <modal :modalId="'fundWallet'" :modalTitle="'Fund Wallet'" :modalSize="'sm'">
+        <!-- <modal :modalId="'fundWallet'" :modalTitle="'Fund Wallet'" :modalSize="'sm'">
             <fund-wallet @wallet-funded="getUserWalletDetails()"/>
+        </modal> -->
+
+        <modal :modalId="'cryptoWalletModal'" :modalTitle="'Crypto Wallet'" :modalSize="'lg'">
+            <create-wallet/>
+        </modal>
+        
+        <modal :modalId="'cryptoWalletInfoModal'" :modalTitle="'Instruction'" :modalSize="'md'">
+            <div class="card">
+                <div class="card-header"><b>How to create/fund Your crypto wallet</b></div>
+                <div class="card-body">
+                    <p class="card-text">
+                        <strong>Create</strong> : To create a crypto wallet, click
+                        <u>Create Crypto Address</u> button and select a coin(USDT or USDC) from
+                        the dropdown. Then select your prefered network chain from Asset chain
+                        dropdown, the submit.<br>
+                        
+                        <strong>Funding</strong> : To fund your crypto wallet, copy one of
+                        your created wallet address to a crypto transaction platform and initiate, 
+                        you should see the transaction on the cypto transaction table. The converted column,
+                        when successful, signifies that your fund had been converted to USD. otherwise, 
+                        You will get notified when conversion happens.
+                    </p>
+                </div>
+            </div>
         </modal>
 
         <modal :modalId="'balanceAnalysis'" :modalTitle="'Balance Analysis'" :modalSize="'lg'">
@@ -178,20 +212,22 @@
 <script>
     import {mapActions,mapGetters,mapState} from 'vuex'
     //import Connect from '@mono.co/connect.js'
-    import fundWallet from '@/components/wallet-account/fundWallet.vue'
+    //import fundWallet from '@/components/wallet-account/fundWallet.vue'
     import balanceAnalysis from '@/components/wallet-account/balanceAnalysis.vue'
     import modal from '@/components/Modal.vue'
     //import api from '../../api/payments'
-    import {notification} from '@/util/notification'
+    //import {notification} from '@/util/notification'
     import pagination from '@/components/BasePagination'
+    import createWallet from '@/components/crypto-wallet/createWallet'
     
     export default {
         name:'user-wallet-account',
         components:{
-            fundWallet,
+            //fundWallet,
             modal,
             balanceAnalysis,
-            pagination
+            pagination,
+            createWallet
         },
         data(){
             return {
@@ -221,15 +257,15 @@
 
         created(){
 
-            if(this.profile == null || Object.entries(this.profile).length == 0){
-                this.getProfileDetails().then(res=>{
-                    if(!res.data.data){
-                        this.$router.push({name:'user-profile'})
-                        notification.warning("You need to update your profile to contiue")
-                        return
-                    }
-                })
-            }
+            // if(this.profile == null || Object.entries(this.profile).length == 0){
+            //     this.getProfileDetails().then(res=>{
+            //         if(!res.data.data){
+            //             this.$router.push({name:'user-profile'})
+            //             notification.warning("You need to update your profile to contiue")
+            //             return
+            //         }
+            //     })
+            // }
 
             if(this.userWalletTransactions.length == 0){
                 this.getUserWalletTransactions()

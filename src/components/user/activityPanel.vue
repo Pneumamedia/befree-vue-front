@@ -28,7 +28,7 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header"><b>Virtual Cards</b></div>
-                <img class="card-img-top" src="/assets/img/virtual-card.jpg" height="300" alt="Card image cap">
+                <img class="card-img-top" src="/assets/img/reg-backg.jpg" height="300" alt="Card image cap">
                 <div class="card-body">
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item">

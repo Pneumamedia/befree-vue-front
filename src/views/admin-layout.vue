@@ -50,6 +50,11 @@
                             <i class="icon icon-wallet blue-text s-18"></i><span class="blue-text">Wallet</span> 
                         </router-link>
                     </li>
+                    <li :class="['treeview', activeMenu()=='admin-crypto-wallets' ? 'active' : '']" @click="setMenu('admin-crypto-wallets')">
+                        <router-link :to="{name:'admin-crypto-wallets'}" >
+                            <i class="icon icon-dollar blue-text s-18"></i><span class="blue-text">Crypto Wallets</span> 
+                        </router-link>
+                    </li>
                     <li :class="['treeview', activeMenu()=='admin-virtual-card' ? 'active' : '']" @click="setMenu('admin-virtual-card')">
                         <router-link :to="{name:'admin-virtual-card'}">
                             <i class="icon icon-account_balance_wallet blue-text s-18"></i> <span class="blue-text">Cards</span>
@@ -73,7 +78,7 @@
                             <span class="blue-text">Settings</span>
                             <i class="icon icon-angle-left s-18 pull-right"></i>
                         </a>
-                        <ul class="treeview-menu menu-open" style="display: block;">
+                        <ul class="treeview-menu" style="display: ;">
                             <li>
                                 <router-link :to="{name:'admin-providers'}" >
                                     <i class="icon icon-circle-o"></i>Provider
@@ -95,6 +100,12 @@
                                 </router-link>
                             </li>
                         </ul>
+                    </li>
+                    <li :class="['treeview', activeMenu()=='admin-security' ? 'active' : '']" @click="setMenu('admin-security')">
+                        <router-link :to="{name:'admin-security'}" >
+                            <i class="icon icon-lock3 blue-text s-18"></i>
+                            <span class="blue-text">Security</span>
+                        </router-link>
                     </li>
                 </ul>
             </section>
@@ -150,7 +161,7 @@
          <modal :modalId="'logOut'" :modalSize="'sm'" :modalTitle="'Log out'">
              <div class="alert alert-danger">
                  Are you sure you want to log out?
-                 <button class="btn btn-danger" @click="logOut()">Yes</button>
+                 <button class="btn btn-danger" @click="adminLogOut()">Yes</button>
              </div>
          </modal>
     </div>
@@ -158,27 +169,31 @@
 
 <script>
 import modal from '@/components/Modal'
-import {mapActions} from 'vuex'
+import {mapActions,mapGetters} from 'vuex'
 export default {
     components:{
         modal
     },
 
     computed:{
-        
+        ...mapGetters('authStore',['adminAuth'])
     },
 
     created(){
+        if(this.adminAuth.id == undefined){
+            this.getAdmin()
+        }
+
         const pageArr = location.pathname.split('/')
         let activeMenu = pageArr[1]+'-'+pageArr[2]
-       this.setMenu(activeMenu)
+        this.setMenu(activeMenu)
 
        document.querySelector('title').innerHTML = 'Bfree | Admin'
        //alert(document.getElementsByTagName('title').text)
     },
 
     methods:{
-        ...mapActions('authStore',['logOut']),
+        ...mapActions('authStore',['adminLogOut','getAdmin']),
 
         setMenu(menu){
             this.$store.state.activeMenu = menu

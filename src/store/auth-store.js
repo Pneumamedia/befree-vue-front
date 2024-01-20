@@ -7,7 +7,7 @@ export default{
     state(){
         return{
             authUser:{},
-            authAdmin:{},
+            adminAuth:{},
             isAdmin:false
         }
     },

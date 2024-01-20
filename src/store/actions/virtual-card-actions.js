@@ -142,6 +142,32 @@ export default {
         }
     },
 
+    async block({commit},id){
+        try {
+            commit('submitting',null,{root:true})
+            const res = await api.block(id)
+            //processResponse(commit,res,'user','user updated successfully')
+            processResponse(null,res,null,'Card blocked successfully')
+            commit('submitted',null,{root:true})
+            return res
+        } catch (error) {
+            LogError(commit,error,'submitted')
+        }
+    },
+
+    async unblock({commit},id){
+        try {
+            commit('submitting',null,{root:true})
+            const res = await api.unblock(id)
+            //processResponse(commit,res,'user','user updated successfully')
+            processResponse(null,res,null,'Card unblocked successfully')
+            commit('submitted',null,{root:true})
+            return res
+        } catch (error) {
+            LogError(commit,error,'submitted')
+        }
+    },
+
     async liquidate({commit},{id,data}){
         try {
             commit('submitting',null,{root:true})
@@ -191,10 +217,10 @@ export default {
             const res = await api.transactions(id)
             //processResponse(commit,res,'user','user updated successfully')
             commit('transactions',res.data.data.data)
-            commit('vCardTransCurrentPage',res.data.data.data.current_page)
-            commit('vCardTransLastPage',res.data.data.data.last_page)
-            commit('vCardTransPerPage',res.data.data.data.per_page)
-            commit('vCardTransTotalPages',res.data.data.data.total)
+            commit('vCardTransCurrentPage',res.data.data.current_page)
+            commit('vCardTransLastPage',res.data.data.last_page)
+            commit('vCardTransPerPage',res.data.data.per_page)
+            commit('vCardTransTotalPages',res.data.data.total)
 
             commit('loaded',null,{root:true})
             return res

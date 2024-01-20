@@ -1,7 +1,7 @@
 import api from '../../api/auth'
 import toastr from 'toastr'
 import vm from '../../main'
-import store from '../index'
+//import store from '../index'
 
 export default {
 
@@ -15,9 +15,9 @@ export default {
                     commit('submitted',null,{root:true})
                     return
                 }
-                res.data.token = res.data.data.access_token
+                //res.data.token = res.data.data.access_token
                 //console.log('token',res.data.data.headers)
-                commit('authUser',res.data)
+                commit('authUser',res.data.data)
                 vm.$router.push({name:'user-dashboard'})
             }else{
                 toastr.warning(res.data.message)
@@ -33,9 +33,9 @@ export default {
             commit('submitting',null,{root:true})
             const res = await api.adminLogin(data)
             if(res && res.status==200){
-                res.data.token = res.data.data.access_token
-                res.data.isAdmin = true
-                commit('authUser',res.data)
+                //res.data.token = res.data.data.access_token
+                res.data.data.isAdmin = true
+                commit('adminAuth',res.data.data)
                 vm.$router.push({name:'admin-dashboard'})
             }else{
                 toastr.warning(res.data.message)
@@ -90,23 +90,26 @@ export default {
         }
     },
 
-    async logOut({commit},id){
+    async logOut({commit}){
         try {
             commit('submitting',null,{root:true})
-            console.log(id)
-            //const res = await api.logOut(id)
-            //if(res.status==200){
-                //toastr.success('Logged out successfully')
-                let authrUser = store.getters['authStore/authUser']
-                if(authrUser.isAdmin != undefined){
-                    vm.$router.push({name:'admin-login'})
-                }else{
-                    vm.$router.push({name:'user-login'})
-                }
-                commit('loggedOut')
-            //}else{
-                //toastr.error(res.data.message)
-           // }
+                
+            vm.$router.push({name:'user-login'})
+                
+            commit('loggedOut')
+            commit('submitted',null,{root:true})
+        } catch (error) {
+            LogError(commit,error,'submitted')
+        }
+    },
+
+    async adminLogOut({commit}){
+        try {
+            commit('submitting',null,{root:true})
+            vm.$router.push({name:'admin-login'})
+            
+            commit('adminLoggedOut')
+           
             commit('submitted',null,{root:true})
         } catch (error) {
             LogError(commit,error,'submitted')
@@ -132,7 +135,7 @@ export default {
             commit('loading',null,{root:true})
             const res = await api.admin()
             console.log(res)
-            commit('authUserReset',res.data)
+            commit('adminAuthReset',res.data)
             commit('loaded',null,{root:true})
             //alert(res.data._id)
             return res

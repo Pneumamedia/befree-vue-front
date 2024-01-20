@@ -9,6 +9,8 @@ import serviceProviders from '@/views/admin/serviceProvider'
 import productServices from '@/views/admin/productServices'
 import charges from '@/views/admin/charges'
 import conversionRates from '@/views/admin/conversionRates'
+import cryptoWallet from '@/views/admin/cryptoWallets'
+import security from '@/views/admin/security'
 
 export default [
     {
@@ -106,6 +108,26 @@ export default [
             path:'conversion-rates',
             name:'admin-conversion-rates',
             component:conversionRates,
+            meta:{
+                isAdmin:true,
+                requiresAuth:true
+            },
+          },
+
+          {
+            path:'crypto-wallets',
+            name:'admin-crypto-wallets',
+            component:cryptoWallet,
+            meta:{
+                isAdmin:true,
+                requiresAuth:true
+            },
+          },
+
+          {
+            path:'security',
+            name:'admin-security',
+            component:security,
             meta:{
                 isAdmin:true,
                 requiresAuth:true

@@ -12,6 +12,7 @@ const http_client = axios.create({
 });
 
 var isOffLine = false;
+var path = window.location.pathname.includes('admin')
 
 let api = function() {
 
@@ -19,7 +20,6 @@ let api = function() {
         if(offline){
             isOffLine = true;
             notification.warning("Please check your internet connectivity")
-            //return;
         }
     })
 
@@ -27,7 +27,7 @@ let api = function() {
         //return;
     }
 
-    let token = localStorage.getItem("befree-token");
+    let token = path ? localStorage.getItem("admin-befree-token") : localStorage.getItem("befree-token");
     if (token) {
         http_client.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     }
@@ -38,7 +38,11 @@ api().interceptors.response.use(
     response => response,
     error => {
         if (error.response.status === 401 || error.response.status === 403) {
-            vm.$store.dispatch("authStore/logOut");
+            if(path){
+                vm.$store.dispatch("authStore/adminLogOut");
+            }else{
+                vm.$store.dispatch("authStore/logOut");
+            }
         }
         return Promise.reject(error);
     }

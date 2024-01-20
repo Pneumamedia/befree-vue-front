@@ -19,7 +19,10 @@
                                             <div class="form-group">
                                                 <label for="example-email" class="col-md-12">Name</label>
                                                 <div class="col-md-12">
-                                                    <input v-model="form.service" type="text" placeholder="Enter service" class="form-control form-control-line">
+                                                    <select v-model="form.service" class="form-control form-control-line">
+                                                        <option :value="null">Select service</option>
+                                                        <option v-for="servic,i in services" :key="i" :value="servic">{{servic}}</option>
+                                                    </select>
                                                 </div>
                                             </div>
 
@@ -156,6 +159,10 @@ export default {
 
         ...mapGetters("serviceProviderStore", ["serviceProviders"]),
         ...mapGetters("productServiceStore", ["productServices"]),
+
+        services(){
+            return ['virtual_card','wallet_account','crypto_wallet']
+        }
     },
 
     created() {

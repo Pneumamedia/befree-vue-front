@@ -4,6 +4,7 @@ import profile from '@/views/user/profile'
 import wallet from '@/views/user/walletAccount'
 import virtualCard from '@/views/user/virtualCards'
 import security from '@/views/user/security'
+import cryptoWallet from '@/views/user/cryptoWallets'
 
 //import cards from '@/views/user/cards'
 
@@ -56,6 +57,16 @@ export default [
             path:'security',
             name:'user-security',
             component:security,
+            meta:{
+                isAdmin:false,
+                requiresAuth:true
+            },
+          },
+
+          {
+            path:'crypto-wallets',
+            name:'crypto-wallets',
+            component:cryptoWallet,
             meta:{
                 isAdmin:false,
                 requiresAuth:true

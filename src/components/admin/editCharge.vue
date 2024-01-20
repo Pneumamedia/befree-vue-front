@@ -32,7 +32,7 @@
                                 <div class="form-group">
                                     <label for="example-email" class="col-md-12">Value</label>
                                     <div class="col-md-12">
-                                        <input v-model="form.value" type="number" min="1" required placeholder="Enter value" class="form-control form-control-line">
+                                        <input v-model="form.value" type="number" min="0" required placeholder="Enter value" class="form-control form-control-line">
                                     </div>
                                 </div>
 
@@ -78,7 +78,7 @@ export default{
     data(){
         return{
             form:{
-                service: this.charge.service,
+                service: this.charge.service_id,
                 fee_type:this.charge.fee_type,
                 value:this.charge.value,
                 currency:this.charge.currency
@@ -93,7 +93,7 @@ export default{
 
     methods:{
         submit(){
-            this.$emit('service-edited',this.form)
+            this.$emit('charge-edited',this.form)
         }
     }
 }
