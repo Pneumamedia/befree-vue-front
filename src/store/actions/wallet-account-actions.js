@@ -85,7 +85,7 @@ export default {
         try {
             commit('submitting',null,{root:true})
             const res = await api.fund(id,data)
-            processResponse(commit,res,'user','Account funded successfully')
+            //processResponse(commit,res,'walletAccount','Account funded successfully')
             commit('submitted',null,{root:true})
             return res
         } catch (error) {

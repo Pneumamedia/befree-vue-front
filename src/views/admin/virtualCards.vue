@@ -78,7 +78,7 @@
                                     <th>Actions</th>
                                 </tr> 
                                 
-                                <tr v-if="loading">
+                                <tr v-if="vCardLoading">
                                     <td colspan="10">
                                         <b-skeleton-table
                                             :rows="5"
@@ -114,12 +114,12 @@
                             </table>
                         </div>
                         <template v-if="!loading">
-                            <pagination v-if="isSearching" :query_data="form" action="'virtualCardStore/search'" 
+                            <pagination v-if="isSearching" :query_data="form" action="virtualCardStore/search" 
                                 :last_page="vCardsLastPage" :current_page="vCardsCurrentPage" :total_pages="vCardsTotalPages" 
                                 :per_page="vCardsPerPage">
                             </pagination>
 
-                            <pagination v-else :action="vCardAction" :query_data="form"
+                            <pagination v-else action="virtualCardStore/getAll" :query_data="form"
                         :last_page="vCardsLastPage" :current_page="vCardsCurrentPage" :total_pages="vCardsTotalPages" 
                         :per_page="vCardsPerPage"></pagination>
                         </template>
@@ -165,7 +165,8 @@
                     query:''
                 },
                 isSearching:false,
-                queryData:null
+                queryData:null,
+                vCardLoading:false
             }
         },
 
@@ -181,7 +182,10 @@
 
         created(){
             if(this.virtualCards.length == 0){
-                this.getAll()
+                this.vCardLoading = true
+                this.getAll().then(()=>{
+                    this.vCardLoading = false
+                })
             }
         },
 

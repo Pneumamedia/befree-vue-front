@@ -7,7 +7,7 @@
         </div>
 
         <div class="">
-            <b-card v-if="loading || !totalUsers || !totalActiveUsers || !totalCards || !totalWalletBalance">
+            <b-card v-if="loading || totalUsers==null || totalActiveUsers==null || totalCards==null || totalWalletBalance==null">
                 <b-skeleton animation="throb" width="85%"></b-skeleton>
                 <b-skeleton animation="throb" width="55%"></b-skeleton>
                 <b-skeleton animation="throb" width="70%"></b-skeleton>
@@ -137,7 +137,7 @@
                                                                 </tr> 
                                                                 
                                                                 <tr v-if="loading">
-                                                                    <td colspan="5">
+                                                                    <td colspan="7">
                                                                         <b-skeleton-table
                                                                             :rows="5"
                                                                             :columns="5"
@@ -201,7 +201,7 @@ export default {
             loading:state=>state.loading
         }),
         
-        ...mapGetters('authStore',['authUser']),
+        ...mapGetters('authStore',['adminAuth']),
         ...mapGetters('walletAccountStore',['totalWalletBalance']),
         ...mapGetters('virtualCardStore',['totalCards']),
         ...mapGetters('userStore',['totalUsers','totalActiveUsers','activeUsers',
@@ -212,10 +212,10 @@ export default {
     created(){
         this.getTotalInactiveUsers()
         //var that = this
-        if(Object.entries(this.authUser).length == 0){
-            this.getAdmin().then(function(){
-            })
-        }
+        // if(Object.entries(this.adminAuth).length == 0){
+        //     this.getAdmin().then(function(){
+        //     })
+        // }
 
         if(!this.totalUsers){
             this.getTotalUsers()

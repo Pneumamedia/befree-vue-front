@@ -3,7 +3,7 @@
             <div class="col-md-12">
                 <div class="card" role="tabpanel">
                     <div class="card-header">
-                        <h4>Wallet Balance Analysis</h4>
+                        <h6>Wallet Balance Analysis</h6>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -21,7 +21,7 @@
                                 </tr> 
                             
                                 <tr v-if="transactions.length == 0">
-                                    <td colspan="7">There are no balance analysis</td>
+                                    <td colspan="9">There are no balance analysis</td>
                                 </tr>
                                 <template v-else>
                                     <tr v-for="transaction,i in transactions" :key="i">

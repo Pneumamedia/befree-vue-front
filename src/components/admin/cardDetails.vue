@@ -1,14 +1,14 @@
 <template>
     <div>
-        <div v-if="card.status=='blocked'" class="row">
+        <div v-if="virtualCardDetails.is_blocked==1" class="row">
             <div class="col-md-12">
                 <div class="alert alert-danger">
-                    This Card has been Blocked. Please Unblock to enable card
+                    This Card has been Blocked. Unblock to enable card
                 </div>
             </div>
         </div>
 
-        <div v-else-if="card.status=='terminated'" class="row">
+        <div v-if="card.status=='terminated'" class="row">
             <div class="col-md-12">
                 <div class="alert alert-danger">
                     This Card has been Terminated.
@@ -19,17 +19,22 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-12 mb-3">
                         <div class="row">
-                            <div class="col-md-6">
+                            <!-- <div class="col-md-6">
                                 <div class="card mb-2">
                                     <img src="/assets/img/virtual-card.jpg" class="img-responsive" height="340">
                                 </div>
-                            </div>
-                            <div class="col-md-6">
+                            </div> -->
+                            <div class="col-md-12">
                                 <div class="card text-white bg-danger mb-1 no-b">
                                     <div class="card-header"><b>Block User Card!!!</b></div>
                                     <div class="card-body text-sm">
+                                        <p>
+                                            You should consider blocking a card if the user has
+                                            commited a crime and you don't want them to perform
+                                            any action on the card.
+                                        </p>
                                         <ol :style="{'list-style-type':'disc','font-size':'12px'}">
                                             <li>
                                                 A blcoked card cannot be funded
@@ -47,15 +52,16 @@
                                     </div>
                                     <div class="card-footer p-1">
                                         <div class="col-sm-12">
-                                            <button class="btn btn-sm bg-white float-right">Block Card</button>
+                                            <button :disabled="virtualCardDetails.liquidating==1 || virtualCardDetails.status=='terminated' || submitting==true" v-if="virtualCardDetails.is_blocked==1" @click="unblockCard()" class="btn btn-sm bg-white float-right">Unblock Card</button>
+                                            <button :disabled="virtualCardDetails.liquidating==1 || virtualCardDetails.status=='terminated' || submitting==true" v-else class="btn btn-sm bg-white float-right" @click="blockCard()">Block Card</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
                     </div>
-                    <div class="col-md-12">
+                    
+                    <div class="col-md-12 mb-3">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="card mb-2" id="incentive">
@@ -74,7 +80,8 @@
 
                                             <div class="form-group">
                                                 <div class="col-sm-12">
-                                                    <button :disabled="card.liquidating==1 || card.status=='blocked' || card.status=='terminated'" class="btn btn-primary" id="add-incentives">Fund</button>
+                                                    <span v-if="submitting" class="btn btn-primary btn-sm">...</span>
+                                                    <button v-else :disabled="virtualCardDetails.liquidating==1 || virtualCardDetails.is_blocked==1 || virtualCardDetails.status=='terminated'" class="btn btn-primary" id="add-incentives">Fund</button>
                                                 </div>
                                             </div>
                                         </form>
@@ -84,7 +91,7 @@
                             <div class="col-md-6">
                                 <div class="card mb-2" id="incentive">
                                     <div class="card-header">
-                                        Liquidate Card
+                                        Liquidate(Withdraw) Card
                                     </div>
                                     <div class="card-body">
                                         <form class="form-horizontal form-materia" id="liquidate-card-form"  @submit.prevent="liquidateCard()">
@@ -96,7 +103,8 @@
                                             </div>
                                             <div class="form-group">
                                                 <div class="col-sm-12">
-                                                    <button :disabled="card.liquidating==1 || card.balance==0 || card.status=='blocked' || card.status=='terminated'" class="btn btn-primary" id="add-incentives">Liquidate</button>
+                                                    <span v-if="submitting" class="btn btn-primary btn-sm">...</span>
+                                                    <button v-else :disabled="virtualCardDetails.liquidating==1 || virtualCardDetails.balance==0 || virtualCardDetails.is_blocked==1 || virtualCardDetails.status=='terminated'" class="btn btn-primary" id="add-incentives">Liquidate</button>
                                                 </div>
                                             </div>
                                         </form>
@@ -106,16 +114,16 @@
                         </div>
                         
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-md-12 mb-3">
                         <div class="card mb-2" id="incentive">
                             <div class="card-header ">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <button :disabled="card.liquidating==1 || card.status=='blocked' || card.status=='terminated'" v-if="virtualCardDetails.status == 'frozen'" @click="unFreezeCard()" class="btn btn-warning">Un Freeze Card</button>
-                                        <button :disabled="card.liquidating==1 || card.status=='blocked' || card.status=='terminated'" v-else @click="freezeCard()" class="btn btn-warning">Freeze Card</button>
+                                        <button :disabled="virtualCardDetails.liquidating==1 || virtualCardDetails.is_blocked==1 || virtualCardDetails.status=='terminated' || submitting==true" v-if="virtualCardDetails.status == 'frozen'" @click="unFreezeCard()" class="btn btn-warning">Un Freeze Card</button>
+                                        <button :disabled="virtualCardDetails.liquidating==1 || virtualCardDetails.is_blocked==1 || virtualCardDetails.status=='terminated' || submitting==true" v-else @click="freezeCard()" class="btn btn-warning">Freeze Card</button>
                                     </div>
                                     <div class="col-md-6">
-                                        <button :disabled="card.liquidating==1 || card.status=='blocked' || card.status=='terminated'" @click="terminateCard()" class="btn btn-danger float-right">Terminate Card</button>
+                                        <button :disabled="virtualCardDetails.liquidating==1 || virtualCardDetails.is_blocked==1 || virtualCardDetails.status=='terminated' || submitting==true" @click="terminateCard()" class="btn btn-danger float-right">Terminate Card</button>
                                     </div>
                                 </div>
                             </div>
@@ -124,7 +132,15 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="card mb-2" :style="{'background-color':virtualCardDetails.design_code +'!important' }">
+                <b-card v-if="vCardLoading">
+                    <b-skeleton animation="throb" width="85%"></b-skeleton>
+                    <b-skeleton animation="throb" width="55%"></b-skeleton>
+                    <b-skeleton animation="throb" width="70%"></b-skeleton>
+                    <b-skeleton animation="throb" width="85%"></b-skeleton>
+                    <b-skeleton animation="throb" width="55%"></b-skeleton>
+                    <b-skeleton animation="throb" width="70%"></b-skeleton>
+                </b-card>
+                <div v-else class="card mb-2" :style="{'background-color':virtualCardDetails.design_code +'!important' }">
                     <div class="card-header text-white">
                         <strong> Cards Details </strong>
                     </div>
@@ -248,7 +264,8 @@ export default {
     },
     data(){
         return {
-            
+            vCardLoading:false,
+            transLoading:false,
         }
     },
 
@@ -264,13 +281,20 @@ export default {
     created(){
         //console.log('card-details',this.card)
         if(this.card){
-            this.getCardDetails(this.card.reference)
-            this.getTransactions(this.card.reference)
+            this.vCardLoading = true
+            this.transLoading = true
+            this.getCardDetails(this.card.reference).then(()=>{
+                this.vCardLoading = false
+            })
+
+            this.getTransactions(this.card.reference).then(()=>{
+                this.transLoading = false
+            })
         }
     },
 
     methods:{
-        ...mapActions('virtualCardStore',['getCardDetails','getTransactions','adminFund','freeze','unFreeze','liquidate']),
+        ...mapActions('virtualCardStore',['getCardDetails','getTransactions','adminFund','freeze','unFreeze','liquidate','block','unblock']),
         //...mapActions('walletAccountStore',['create','fund','getDetails','getBalance','getTransactions']),
         //...mapActions('walletAccountStore',['create','fund','getDetails','getBalance','getTransactions']),
         submit(){
@@ -281,7 +305,7 @@ export default {
                 //console.log('lol',this.card.reference)
                 let reference = this.card.reference
                 let ownerUUID = this.card.owner_uuid
-                this.adminfund({id:reference,ownerUUID,data}).then(res=>{
+                this.adminFund({id:reference,ownerUUID,data}).then(res=>{
                     if(res.status == 200){
                         this.$emit('card-funded')
                         this.getCardDetails(reference)
@@ -344,7 +368,33 @@ export default {
                     }
                 })
             }
-        } 
+        },
+
+        blockCard(){
+            let yes = confirm("Hello ADMIN, Are you sure you want to BLOCK this card?")
+            if(yes){
+                let reference = this.card.reference
+                this.block(this.card.reference).then(res=>{
+                    if(res && res.status == 200){
+                        this.$emit('card-updated')
+                        this.getCardDetails(reference)
+                    }
+                })
+            }
+        },
+
+        unblockCard(){
+            let yes = confirm("Hello ADMIN, Are you sure you want to UNBLOCK this card?")
+            if(yes){
+                let reference = this.card.reference
+                this.unblock(this.card.reference).then(res=>{
+                    if(res && res.status == 200){
+                        this.$emit('card-updated')
+                        this.getCardDetails(reference)
+                    }
+                })
+            }
+        },
     }
 }
 </script>

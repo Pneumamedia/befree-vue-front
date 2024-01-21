@@ -12,5 +12,6 @@ export default  {
     virtualCards: `${apiVersion}/virtual-cards`,
     productServices: `${apiVersion}/product-services`,
     serviceProviders: `${apiVersion}/service-providers`,
-    conversionRates: `${apiVersion}/conversion-rates` //currency conversion rates
+    conversionRates: `${apiVersion}/conversion-rates`, //currency conversion rates
+    cryptoWallets: `${apiVersion}/crypto` //currency conversion rates
 };

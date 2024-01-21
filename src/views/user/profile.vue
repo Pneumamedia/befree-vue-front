@@ -72,7 +72,7 @@
                         <div class="card-body">
                             <form id="profile_data" enctype="multipart/form-data" @submit.prevent="submitProfile()">
                                     
-                                <div class="">
+                                <!-- <div class="">
                                     <div class="">
                                         <div class="form-row">
                                             <div class="col-md-12">
@@ -197,7 +197,7 @@
                                         <span v-if="submitting" class="btn btn-primary btn-md">...</span>
                                         <button v-else type="submit" class="btn btn-primary btn-md"><i class="icon-save mr-2"></i>Update Data</button>
                                     </div>
-                                </div>
+                                </div> -->
                             </form>
                         </div>
                     </div>

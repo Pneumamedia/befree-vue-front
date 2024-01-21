@@ -39,7 +39,7 @@
                                             <div class="form-group">
                                                 <label for="example-email" class="col-md-12">Value</label>
                                                 <div class="col-md-12">
-                                                    <input v-model="form.value" type="number" min="1" required placeholder="Enter value" class="form-control form-control-line">
+                                                    <input v-model="form.value" type="number" min="0" required placeholder="Enter value" class="form-control form-control-line">
                                                 </div>
                                             </div>
 
@@ -130,7 +130,7 @@
                     :table-props="{ bordered: true, striped: true }"
                 ></b-skeleton-table>
             </template>
-            <edit-charge v-else :charge="charge" :services="services" @charge-edited="updateCharge"/>
+            <edit-charge v-else :charge="charge" :feeTypes="feeTypes" :services="productServices" @charge-edited="updateCharge"/>
         </modal>
 
     </div>
@@ -168,7 +168,7 @@ export default {
         ...mapGetters("productServiceStore", ["productServices"]),
 
         feeTypes(){
-            return ['funding','liquidation','monthly_maintenance','funding_max_value','funding_min_value']
+            return ['funding','liquidation','monthly_maintenance','funding_max_value','funding_min_value','currency_exchange_fee']
         }
     },
 

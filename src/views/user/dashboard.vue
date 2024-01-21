@@ -217,10 +217,10 @@ export default {
 
     created(){
         //var that = this
-        if(Object.entries(this.authUser).length == 0){
-            this.getUser().then(function(){
-            })
-        }
+        // if(Object.entries(this.authUser).length == 0){
+        //     this.getUser().then(function(){
+        //     })
+        // }
         if(this.userVirtualCardTransactions.length == 0){
             this.getUserVirtualCardTransactions()
         }
