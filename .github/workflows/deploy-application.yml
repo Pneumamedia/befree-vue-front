@@ -63,9 +63,9 @@ jobs:
       - name: upload
         uses: appleboy/scp-action@master
         with:
-          host: ${{matrix.server.ip}}
-          username: ${{matrix.server.username}}
-          password: ${{matrix.server.password}}
+          host: ${{secrets.ip}}
+          username: ${{secrets.username}}
+          password: ${{secrets.password}}
           source: ${{github.sha}}.tar.gz
           target: ${{matrix.server.path}}/artifacts
       - name: Extract archive and create directories
@@ -73,10 +73,10 @@ jobs:
         env:
           GITHUB_SHA: ${{github.sha}}
         with:
-          host: ${{matrix.server.ip}}
-          username: ${{matrix.server.username}}
-          password: ${{matrix.server.password}}
-          port: ${{matrix.server.port}}
+          host: ${{secrets.ip}}
+          username: ${{secrets.username}}
+          password: ${{secrets.password}}
+          port: ${{secrets.port}}
           script: |
             mkdir -p "${{matrix.server.path}}/releases/${{github.sha}}"
             tar -xzf "${{matrix.server.path}}/artifacts/${{github.sha}}".tar.gz -C "${{matrix.server.path}}/releases/${{github.sha}}"
@@ -98,10 +98,10 @@ jobs:
          # STORAGE_PATH: ${{matrix.server.path}}/storage
           BASE_PATH: ${{matrix.server.path}}
         with:
-          host: ${{matrix.server.ip}}
-          username: ${{matrix.server.username}}
-          password: ${{matrix.server.password}}
-          port: ${{matrix.server.port}}
+          host: ${{secrets.ip}}
+          username: ${{secrets.username}}
+          password: ${{secrets.password}}
+          port: ${{secrets.port}}
           envs: GITHUB_SHA,RELEASE_PATH,ACTIVE_RELEASE_PATH,BASE_PATH
           script: |
             ${{matrix.server.beforeHook}}
@@ -124,10 +124,10 @@ jobs:
           BASE_PATH: ${{matrix.server.path}}
           VUE_ENV: ${{secrets.VUE_ENV}}
         with:
-          host: ${{matrix.server.ip}}
-          username: ${{matrix.server.username}}
-          password: ${{matrix.server.password}}
-          port: ${{matrix.server.port}}
+          host: ${{secrets.ip}}
+          username: ${{secrets.username}}
+          password: ${{secrets.password}}
+          port: ${{secrets.port}}
           envs: GITHUB_SHA, RELEASE_PATH, ACTIVE_RELEASE_PATH, BASE_PATH, VUE_ENV
           script: |
             ln -s -n -f $RELEASE_PATH $ACTIVE_RELEASE_PATH
@@ -150,10 +150,10 @@ jobs:
          # STORAGE_PATH: ${{matrix.server.path}}/storage
           BASE_PATH: ${{matrix.server.path}}
         with:
-          host: ${{matrix.server.ip}}
-          username: ${{matrix.server.username}}
-          password: ${{matrix.server.password}}
-          port: ${{matrix.server.port}}
+          host: ${{secrets.ip}}
+          username: ${{secrets.username}}
+          password: ${{secrets.password}}
+          port: ${{secrets.port}}
           envs: GITHUB_SHA,RELEASE_PATH,ACTIVE_RELEASE_PATH,BASE_PATH
           script: |
             ${{matrix.server.afterHook}}
@@ -172,10 +172,10 @@ jobs:
           RELEASE_PATH: ${{matrix.server.path}}/releases/${{github.sha}}
           ARTIFACT_PATH: ${{matrix.server.path}}/artifacts
         with:
-          host: ${{matrix.server.ip}}
-          username: ${{matrix.server.username}}
-          password: ${{matrix.server.password}}
-          port: ${{matrix.server.port}}
+          host: ${{secrets.ip}}
+          username: ${{secrets.username}}
+          password: ${{secrets.password}}
+          port: ${{secrets.port}}
           envs: ARTIFACT_PATH,RELEASE_PATH
           script: |
             cd $RELEASE_PATH && ls -t -1 | tail -n +6 | xargs rm -rf
