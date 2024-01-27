@@ -99,7 +99,7 @@
                                     <td>{{card.brand}}</td>
                                     <td>{{card.name_on_card}}</td>
                                     <td>{{card.currency}}</td>
-                                    <td>{{card.masked_card_number}}</td>
+                                    <td>{{card.masked_card_number}} <span @click="copyText(card)" title="copy card number" class="copy icon icon-copy blue-text"></span></td>
                                     <td>
                                         <div class="dropdown">
                                             <button class="btn btn-sm btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -144,11 +144,18 @@
     </div>
 </template>
 
+<style scoped>
+.copy{
+    cursor: pointer !important;
+}
+</style>
+
 <script>
     import {mapActions,mapGetters,mapState} from 'vuex'
     import cardDetails from '@/components/admin/cardDetails.vue'
     import modal from '@/components/Modal.vue'
     import pagination from '@/components/BasePagination.vue'
+    import {notification} from '@/util/notification'
     export default{
         name:'user-virtual-cards',
         components:{
@@ -212,6 +219,18 @@
                 this.isSearching = false;
                 this.queryData = {status:status}
                 this.getCardByStatus(this.queryData)
+            },
+            
+            async copyText(card) {
+                try{
+                    var copyText = card.card_number;
+
+                    await navigator.clipboard.writeText(copyText);
+
+                    notification.info("Card number copied to clipboard")
+                }catch(err){
+                    console.log('Unable to copy to clipboard')
+                }
             }
         }
     }

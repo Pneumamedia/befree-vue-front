@@ -40,7 +40,7 @@
                                                 <label for="example-email" class="col-md-12">Has monthly fee</label>
                                                 <div class="col-md-12">
                                                     <select v-model="form.has_monthly_fee" class="form-control form-control-line">
-                                                        <option value="">Select Yes/No</option>
+                                                        <option value="0">Select Yes/No</option>
                                                         <option value="1">Yes</option>
                                                         <option value="0">No</option>
                                                     </select>

@@ -48,6 +48,7 @@
                             <table class="table table-hover table-bordered">
                                 <tr>
                                     <th><strong>S/N</strong></th>
+                                    <th>Name</th>
                                     <th>Wallet address</th>
                                     <th>Coin</th>
                                     <th>Network Chain</th>
@@ -56,7 +57,7 @@
                                 </tr> 
                                     
                                 <tr v-if="loading">
-                                    <td colspan="7">
+                                    <td colspan="8">
                                         <b-skeleton-table
                                             :rows="3"
                                             :columns="5"
@@ -66,11 +67,12 @@
                                 </tr>
                                 <template v-else>
                                     <tr v-if="cryptoAddresses.length == 0">
-                                        <td colspan="7">There are no wallets</td>
+                                        <td colspan="8">There are no wallets</td>
                                     </tr>
                                     <tr v-else v-for="address,i in cryptoAddresses" :key="i">
                                         <td>{{++i}}</td>
-                                        <td>{{address.wallet_address}}</td>
+                                        <td>{{address.owner_name}}</td>
+                                        <td>{{address.wallet_address}} <span @click="copyText(address)" title="copy wallet address" class="copy icon icon-copy blue-text"></span></td>
                                         <td>{{address.coin}}</td>
                                         <td>{{address.network_chain}}</td>
                                         <td>{{address.purpose}}</td>
@@ -134,12 +136,13 @@
                                     <th>Status</th>
                                     <th>Amount</th>
                                     <th>Amount(USD)</th>
+                                    <th>Fee</th>
                                     <th>Converted</th>
                                     <th>Date</th>
                                 </tr> 
                                     
                                 <tr v-if="loading">
-                                    <td colspan="11">
+                                    <td colspan="12">
                                         <b-skeleton-table
                                             :rows="3"
                                             :columns="5"
@@ -149,7 +152,7 @@
                                 </tr>
                                 <template v-else>
                                     <tr v-if="cryptoTransactions.length == 0">
-                                        <td colspan="11">There are no Transactions</td>
+                                        <td colspan="12">There are no Transactions</td>
                                     </tr>
                                     <tr v-else v-for="trans,i in cryptoTransactions" :key="i">
                                         <td>{{++i}}</td>
@@ -161,6 +164,7 @@
                                         <td>{{trans.status}}</td>
                                         <td>{{trans.amount}}</td>
                                         <td>{{trans.amount_usd}}</td>
+                                        <td>{{trans.fee}}</td>
                                         <td>{{trans.converted?'successful':'pending'}}</td>
                                         <td>{{trans.created_at}}</td>
                                     </tr>
@@ -178,9 +182,16 @@
     </div>
 </template>
 
+<style scoped>
+.copy{
+    cursor: pointer !important;
+}
+</style>
+
 <script>
 import {mapActions,mapGetters,mapState} from 'vuex'
 import pagination from '@/components/BasePagination.vue';
+import {notification} from '@/util/notification'
 export default {
 
     data(){
@@ -235,6 +246,19 @@ export default {
 
         searchTrans(){
             this.searchTransactions({data:this.transSearchForm,user_uuid:null})
+        },
+
+        async copyText(address) {
+            try{
+                var copyText = address.wallet_address;
+
+                await navigator.clipboard.writeText(copyText);
+
+                notification.info("Wallet address copied to clipboard")
+            }catch(err){
+                console.log('Unable to copy to clipboard')
+            }
+            
         }
 
         // submit(){

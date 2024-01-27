@@ -39,7 +39,7 @@
                                             <div class="form-group">
                                                 <label for="example-email" class="col-md-12">Value</label>
                                                 <div class="col-md-12">
-                                                    <input v-model="form.value" type="number" min="0" required placeholder="Enter value" class="form-control form-control-line">
+                                                    <input v-model="form.value" type="text" required placeholder="Enter value" class="form-control form-control-line">
                                                 </div>
                                             </div>
 
