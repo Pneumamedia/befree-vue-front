@@ -5,7 +5,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-7 mx-md-auto">
-                        <div class="text-center">
+                        <div class="text-center" :style="{'overflow':'hidden'}">
                             <img class="img-responsive" src="/assets/img/befree-logo.jpeg" width="500" height="218" alt="">
                             <p class="p-t-b-20 text-white">Back Office, signin...
                                 </p>

@@ -168,7 +168,7 @@ export default {
         ...mapGetters("productServiceStore", ["productServices"]),
 
         feeTypes(){
-            return ['funding','liquidation','monthly_maintenance','funding_max_value','funding_min_value','currency_exchange_fee']
+            return ['funding','liquidation','monthly_maintenance','funding_max_value','funding_min_value','currency_exchange_fee','card_creation']
         }
     },
 

@@ -43,7 +43,7 @@
                                     </tr>
                                     <tr v-else v-for="address,i in cryptoAddresses" :key="i">
                                         <td>{{++i}}</td>
-                                        <td>{{address.wallet_address}}</td>
+                                        <td>{{address.wallet_address}} <span @click="copyText(address)" title="copy wallet address" class="copy icon icon-copy blue-text"></span></td>
                                         <td>{{address.coin}}</td>
                                         <td>{{address.network_chain}}</td>
                                         <td>{{address.purpose}}</td>
@@ -160,8 +160,15 @@
     </div>
 </template>
 
+<style scoped>
+    .copy{
+        cursor: pointer !important;
+    }
+</style>
+
 <script>
 import {mapActions,mapGetters,mapState} from 'vuex'
+import {notification} from '@/util/notification'
 export default {
 
     data(){
@@ -209,6 +216,19 @@ export default {
             this.form.networkChain = strSplit[1]
             this.createAddress(this.form)
         },
+
+        async copyText(address) {
+            try{
+                var copyText = address.wallet_address;
+
+                await navigator.clipboard.writeText(copyText);
+
+                notification.info("Wallet address copied to clipboard")
+            }catch(err){
+                console.log('Unable to copy to clipboard')
+            }
+            
+        }
     }
 }
 </script>

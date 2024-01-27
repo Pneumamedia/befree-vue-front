@@ -22,13 +22,7 @@
                     <div class="card-body text-sm">
                         <ol :style="{'list-style-type':'disc'}">
                             <li>
-                                You will be charged a fee for funding your card
-                            </li>
-                            <li>
-                                You will be charged a fee for liquidating your card
-                            </li>
-                            <li>
-                                You cannot terminate a liquidating card
+                                You will be charged a fee of $10 USD for card creation
                             </li>
                             <li>
                                 You cannot fund a liquidating card
@@ -97,7 +91,7 @@
                                 </tr>
                                 <template v-else>
                                     <tr v-if="userVirtualCards.length == 0">
-                                        <td colspan="9">There are no virtual cards</td>
+                                        <td colspan="9">There are no virtual cards</td> 
                                     </tr>
                                     <tr v-else v-for="card,i in userVirtualCards" :key="i">
                                     <td>{{++i}}</td>
@@ -107,7 +101,7 @@
                                     <td>{{card.brand}}</td>
                                     <td>{{card.name_on_card}}</td>
                                     <td>{{card.currency}}</td>
-                                    <td>{{card.masked_card_number}}</td>
+                                    <td>{{card.masked_card_number}} <span @click="copyText(card)" title="copy card number" class="copy icon icon-copy blue-text"></span></td>
                                     <!-- <td>{{card.expiry_month}}</td>
                                     <td>{{card.expiry_year}}</td> -->
                                     <td>
@@ -149,6 +143,12 @@
         
     </div>
 </template>
+
+<style scoped>
+.copy{
+    cursor: pointer !important;
+}
+</style>
 
 
 
@@ -240,6 +240,19 @@
             setCard(card){
                 //console.log(card)
                 this.card = card
+            },
+
+            async copyText(card) {
+                try{
+                    var copyText = card.card_number;
+
+                    await navigator.clipboard.writeText(copyText);
+
+                    notification.info("Card number copied to clipboard")
+                }catch(err){
+                    console.log('Unable to copy to clipboard')
+                }
+                
             }
         }
     }

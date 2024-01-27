@@ -125,6 +125,7 @@
                         <tr>
                             <th><strong>S/N</strong></th>
                             <th>Amount</th>
+                            <th>Fee</th>
                             <th>Type</th>
                             <th>Currency</th>
                             <th>Status</th>
@@ -134,7 +135,7 @@
                         </tr> 
                          
                         <tr v-if="loading">
-                            <td colspan="8">
+                            <td colspan="9">
                                 <b-skeleton-table
                                     :rows="5"
                                     :columns="8"
@@ -144,11 +145,12 @@
                         </tr>
                         <template v-else>
                             <tr v-if="userWalletTransactions.length == 0">
-                                <td colspan="8">There are no wallet account transactions</td>
+                                <td colspan="9">There are no wallet account transactions</td>
                             </tr>
                             <tr v-else v-for="transaction,i in userWalletTransactions" :key="i">
                                 <td>{{((walletTransCurrentPage-1)*walletTransPerPage)+i+1}}</td>
                                 <td>{{transaction.amount}}</td>
+                                <td>{{transaction.fee}}</td>
                                 <td>{{transaction.txn_type}}</td>
                                 <td>{{transaction.currency}}</td>
                                 <td>{{transaction.txn_status}}</td>
