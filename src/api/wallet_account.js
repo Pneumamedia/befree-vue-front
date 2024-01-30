@@ -17,6 +17,10 @@ export default {
         return http().post(`${endPoints.walletAccounts}/fund/${accountId}`,data)
     },
 
+    withdraw(accountId,data){
+        return http().post(`${endPoints.walletAccounts}/withdraw/${accountId}`,data)
+    },
+
     /**
      * admin get wallet details
      * @param {*} accountId 

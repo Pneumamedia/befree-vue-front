@@ -93,6 +93,18 @@ export default {
         }
     },
 
+    async withdraw({commit},{id,data}){
+        try {
+            commit('submitting',null,{root:true})
+            const res = await api.withdraw(id,data)
+            //processResponse(commit,res,'walletAccount','Account funded successfully')
+            commit('submitted',null,{root:true})
+            return res
+        } catch (error) {
+            LogError(commit,error,'submitted')
+        }
+    },
+
     async getTransactions({commit}){
         try {
             commit('loading',null,{root:true})

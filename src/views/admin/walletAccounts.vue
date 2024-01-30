@@ -115,7 +115,7 @@
                     :table-props="{ bordered: true, striped: true }"
                 ></b-skeleton-table>
             </template>
-            <user-wallet @wallet-funded="getAll()" v-else :walletAccount="wallet" :inflowOutFlow="inflowOutFlow"/>
+            <user-wallet @wallet-funded="getAll()" @wallet-debited="getAll()" v-else :walletAccount="wallet" :inflowOutFlow="inflowOutFlow"/>
         </modal>
         
     </div>

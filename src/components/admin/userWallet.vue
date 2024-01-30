@@ -56,10 +56,21 @@
             <div class="col-md-4">
                 <div class="card mb-2">
                     <div class="card-header">
-                        <strong>Fund Wallet</strong>
+                        <strong>Credit/Debit Wallet</strong>
                     </div>
                     <div class="card-body p-1">
-                        <form class="form-horizontal form-materia" id="fund-card-form" enctype="multipart/form-data" @submit.prevent="fundUser()">
+                        <form class="form-horizontal form-materia" id="fund-card-form" enctype="multipart/form-data" @submit.prevent="walletAction()">
+                            <div class="form-group">
+                                <label class="col-md-12">Action</label>
+                                <div class="col-md-12">
+                                    <select v-model="action" required class="form-control form-control-line">
+                                        <option :value="null" selected>Select action</option>
+                                        <option value="credit">Credit</option>
+                                        <option value="debit">Debit</option>
+                                    </select>
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <label class="col-md-12">($)Amount</label>
                                 <div class="col-md-12">
@@ -69,7 +80,8 @@
 
                             <div class="form-group">
                                 <div class="col-sm-12">
-                                    <button class="btn btn-primary">Fund</button>
+                                    <span v-if="submitting" class="btn btn-primary">...</span>
+                                    <button v-else class="btn btn-primary">Submit</button>
                                 </div>
                             </div>
                         </form>
@@ -97,7 +109,8 @@ export default{
         return{
             form:{
                 amount:0
-            }
+            },
+            action:null
             
         }
     },
@@ -108,12 +121,27 @@ export default{
     },
 
     methods:{
-        ...mapActions('walletAccountStore',['fund']),
+        ...mapActions('walletAccountStore',['fund','withdraw']),
 
         fundUser(){
             this.fund({id:this.walletAccount.account_id, data:this.form}).then(()=>{
                 this.$emit('wallet-funded')
             })
+        },
+
+        walletAction(){
+            if(this.action==='credit'){
+                this.fund({id:this.walletAccount.account_id, data:this.form}).then(()=>{
+                    this.$emit('wallet-funded')
+                })
+            }
+
+            if(this.action==='debit'){
+                this.withdraw({id:this.walletAccount.account_id, data:this.form}).then(()=>{
+                    this.$emit('wallet-debited')
+                })
+            }
+            
         }
     }
 }

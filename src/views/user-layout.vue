@@ -157,6 +157,8 @@ export default {
 
        document.querySelector('title').innerHTML = 'Bfree | User'
        //alert(document.getElementsByTagName('title').text)
+
+       this.idleLogout(this)
     },
 
     methods:{
@@ -167,6 +169,27 @@ export default {
         },
         activeMenu(){
             return this.$store.state.activeMenu
+        },
+
+        idleLogout(that){
+            var t;
+            window.onload = resetTimer;
+            window.onmousemove = resetTimer;
+            window.onmousedown = resetTimer;    // catches touchscreen presses as well
+            window.ontouchstart = resetTimer;   // catches touchscreen swipes as well
+            window.ontouchmove = resetTimer;    // required by some devices
+            window.onclick = resetTimer;        // catches touchpad clicks as well
+            window.onkeydown = resetTimer;
+            window.addEventListener('scroll', resetTimer, true); // improved; see comments
+
+            function logOut() {
+                 that.logOut()
+            }
+
+            function resetTimer() {
+                clearTimeout(t);
+                t = setTimeout(logOut, 60000);  // time is in milliseconds
+            }
         }
     }
     
