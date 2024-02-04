@@ -14,7 +14,7 @@
             <div class="col-md-12">
                 <div class="card" id="profile" role="tabpanel">
                     <div class="card-header">
-                        <h4></h4>
+                        <h5>Total Profit - ${{ totalSystemFeesCharge }}</h5>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
