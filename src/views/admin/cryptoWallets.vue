@@ -161,7 +161,7 @@
                                         <td>{{trans.asset_id}}</td>
                                         <td>{{trans.coin}}</td>
                                         <td>{{trans.operation}}</td>
-                                        <td>{{trans.status}}</td>
+                                        <!-- <td>{{trans.status}}</td> -->
                                         <td>{{trans.amount}}</td>
                                         <td>{{trans.amount_usd}}</td>
                                         <td>{{trans.fee}}</td>
