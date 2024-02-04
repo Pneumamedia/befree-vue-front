@@ -117,7 +117,7 @@
                                     <th>Network</th>
                                     <th>Coin</th>
                                     <th>Operation</th>
-                                    <th>Status</th>
+                                    <!-- <th>Provider Status</th> -->
                                     <th>Amount</th>
                                     <th>Amount(USD)</th>
                                     <th>Converted</th>
@@ -125,7 +125,7 @@
                                 </tr> 
                                     
                                 <tr v-if="loading">
-                                    <td colspan="11">
+                                    <td colspan="10">
                                         <b-skeleton-table
                                             :rows="3"
                                             :columns="5"
@@ -135,7 +135,7 @@
                                 </tr>
                                 <template v-else>
                                     <tr v-if="cryptoTransactions.length == 0">
-                                        <td colspan="11">There are no Transactions</td>
+                                        <td colspan="10">There are no Transactions</td>
                                     </tr>
                                     <tr v-else v-for="trans,i in cryptoTransactions" :key="i">
                                         <td>{{++i}}</td>
@@ -148,7 +148,7 @@
                                         <td>{{trans.amount}}</td>
                                         <td>{{trans.amount_usd}}</td>
                                         <td>{{trans.converted?'successful':'pending'}}</td>
-                                        <td>{{trans.created_at}}</td>
+                                        <td>{{trans.updated_at}}</td>
                                     </tr>
                                 </template>                                                                                                                                                                                                                                                                   
                             </table>
@@ -200,11 +200,21 @@ export default {
         
         if(this.cryptoAddresses.length==0) this.getAddresses()
 
-        if(this.cryptoTransactions.length==0) this.getTransactions(this.authUser.user_uuid)
+        if(this.cryptoTransactions.length==0){
+            if(this.authUser.user_uuid == undefined){
+                    this.getUser().then((res)=>{
+                    this.getTransactions(res.data.user_uuid)
+                })
+            }else{
+                this.getTransactions(this.authUser.user_uuid)
+            }
+        }
+        //if(this.cryptoTransactions.length==0 && this.authUser.user_uuid) this.getTransactions(this.authUser.user_uuid)
     },
 
     methods:{
         ...mapActions('cryptoWalletStore',['getCoins','fetchNetworkChains','createAddress','getAddresses','getTransactions']),
+        ...mapActions('authStore',['getUser']),
 
         fetchChains(){
            this.fetchNetworkChains(this.coin)

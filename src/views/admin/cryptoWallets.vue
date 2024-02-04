@@ -133,7 +133,7 @@
                                     <th>Network</th>
                                     <th>Coin</th>
                                     <th>Operation</th>
-                                    <th>Status</th>
+                                    <!-- <th>Status</th> -->
                                     <th>Amount</th>
                                     <th>Amount(USD)</th>
                                     <th>Fee</th>
@@ -142,7 +142,7 @@
                                 </tr> 
                                     
                                 <tr v-if="loading">
-                                    <td colspan="12">
+                                    <td colspan="11">
                                         <b-skeleton-table
                                             :rows="3"
                                             :columns="5"
@@ -152,7 +152,7 @@
                                 </tr>
                                 <template v-else>
                                     <tr v-if="cryptoTransactions.length == 0">
-                                        <td colspan="12">There are no Transactions</td>
+                                        <td colspan="11">There are no Transactions</td>
                                     </tr>
                                     <tr v-else v-for="trans,i in cryptoTransactions" :key="i">
                                         <td>{{++i}}</td>
@@ -166,7 +166,7 @@
                                         <td>{{trans.amount_usd}}</td>
                                         <td>{{trans.fee}}</td>
                                         <td>{{trans.converted?'successful':'pending'}}</td>
-                                        <td>{{trans.created_at}}</td>
+                                        <td>{{trans.updated_at}}</td>
                                     </tr>
                                 </template>                                                                                                                                                                                                                                                                   
                             </table>

@@ -22,4 +22,12 @@ export default {
     details(txn_ref){
         return http().get(`${endPoints.transactions}/${txn_ref}/details`)
     },
+
+    systemFeesCharge(){
+        return http().get(`${endPoints.transactions}/system-fees-charge`)
+    },
+
+    totalSystemFeesCharge(){
+        return http().get(`${endPoints.transactions}/total-system-fees-charge`)
+    },
 }

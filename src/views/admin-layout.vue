@@ -60,6 +60,11 @@
                             <i class="icon icon-account_balance_wallet blue-text s-18"></i> <span class="blue-text">Cards</span>
                         </router-link>
                     </li>
+                    <li :class="['treeview', activeMenu()=='admin-profit-calculation' ? 'active' : '']" @click="setMenu('admin-profit-calculation')">
+                        <router-link :to="{name:'admin-profit-calculation'}">
+                            <i class="icon icon-money blue-text s-18"></i> <span class="blue-text">Profit Calculation</span>
+                        </router-link>
+                    </li>
                     
                     <!-- <li :class="['treeview', activeMenu()=='admin-security' ? 'active' : '']" @click="setMenu('admin-security')">
                         <router-link :to="{name:'admin-security'}" >
@@ -221,7 +226,7 @@ export default {
 
             function resetTimer() {
                 clearTimeout(t);
-                t = setTimeout(logOut, 60000);  // time is in milliseconds
+                t = setTimeout(logOut, 300000);  // time is in milliseconds
             }
         }
     }

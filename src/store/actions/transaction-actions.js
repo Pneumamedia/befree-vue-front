@@ -71,7 +71,35 @@ export default{
         } catch (error) {
             LogError(commit,error,'loaded')
         }
+    },
+
+    async getSystemFeesCharge({commit}){
+        try {
+            commit('loading',null,{root:true})
+            const res = await api.systemFeesCharge()
+            //processResponse(commit,res,'user','user updated successfully')
+            commit('systemFeesCharge',res.data.data.data)
+            commit('loaded',null,{root:true})
+            return res
+        } catch (error) {
+            LogError(commit,error,'loaded')
+        }
+    },
+
+    async getTotalSystemFeesCharge({commit}){
+        try {
+            commit('loading',null,{root:true})
+            const res = await api.totalSystemFeesCharge()
+            //processResponse(commit,res,'user','user updated successfully')
+            commit('totalSystemFeesCharge',res.data.data)
+            commit('loaded',null,{root:true})
+            return res
+        } catch (error) {
+            LogError(commit,error,'loaded')
+        }
     }
+
+
 }
 
 const LogError = (commit,err,commitType)=>{

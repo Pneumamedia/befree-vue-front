@@ -11,6 +11,8 @@ export default{
             userWalletTransactions:[],
             userVirtualCardTransactions:[],
             details:{},
+            systemFeesCharge:[],
+            totalSystemFeesCharge:null,
 
             walletTransCurrentPage:1,
             walletTransLastPage:1,

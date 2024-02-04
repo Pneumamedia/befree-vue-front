@@ -13,6 +13,14 @@ export default {
         return state.userWalletTransactions
     },
 
+    systemFeesCharge(state){
+        return state.systemFeesCharge
+    },
+
+    totalSystemFeesCharge(state){
+        return state.totalSystemFeesCharge
+    },
+
     userVirtualCardTransactions(state){
         return state.userVirtualCardTransactions
     },

@@ -188,7 +188,7 @@ export default {
 
             function resetTimer() {
                 clearTimeout(t);
-                t = setTimeout(logOut, 60000);  // time is in milliseconds
+                t = setTimeout(logOut, 300000);  // time is in milliseconds
             }
         }
     }

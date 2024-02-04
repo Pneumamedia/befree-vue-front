@@ -11,6 +11,7 @@ import charges from '@/views/admin/charges'
 import conversionRates from '@/views/admin/conversionRates'
 import cryptoWallet from '@/views/admin/cryptoWallets'
 import security from '@/views/admin/security'
+import profitCalculation from '@/views/admin/profitCalculation'
 
 export default [
     {
@@ -113,7 +114,6 @@ export default [
                 requiresAuth:true
             },
           },
-
           {
             path:'crypto-wallets',
             name:'admin-crypto-wallets',
@@ -123,11 +123,19 @@ export default [
                 requiresAuth:true
             },
           },
-
           {
             path:'security',
             name:'admin-security',
             component:security,
+            meta:{
+                isAdmin:true,
+                requiresAuth:true
+            },
+          },
+          {
+            path:'profit-calculation',
+            name:'admin-profit-calculation',
+            component:profitCalculation,
             meta:{
                 isAdmin:true,
                 requiresAuth:true

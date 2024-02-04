@@ -12,6 +12,14 @@ export default {
         state.userWalletTransactions = data;
     },
 
+    systemFeesCharge(state,data){
+        state.systemFeesCharge = data
+    },
+
+    totalSystemFeesCharge(state,data){
+        state.totalSystemFeesCharge = data
+    },
+
     userVirtualCardTransactions(state,data){
         state.userVirtualCardTransactions = data;
     },
