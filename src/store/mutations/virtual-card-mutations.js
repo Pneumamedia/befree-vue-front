@@ -25,6 +25,14 @@ export default {
          state.totalCards = Number(data)
     },
 
+    cardStatement(state,data){
+          return state.cardStatement = data
+     },
+
+     cardStatementSummary(state,data){
+          return state.cardStatementSummary = data
+     },
+
     vCardsCurrentPage(state,data){
          state.vCardsCurrentPage = data
     },

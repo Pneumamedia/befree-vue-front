@@ -15,6 +15,10 @@ export default {
         return http().post(`${endPoints.virtualCards}`,data)
     },
 
+    adminCreate(ownerUUID,data){
+        return http().post(`${endPoints.virtualCards}/${ownerUUID}/create`,data)
+    },
+
     //user fund card
     fund(cardId,data){
         return http().post(`${endPoints.virtualCards}/${cardId}/fund`,data)
@@ -79,6 +83,14 @@ export default {
     //admin unblock card
     unblock(cardId){
         return http().patch(`${endPoints.virtualCards}/${cardId}/unblock`)
+    },
+
+    statement(data){
+        return http().get(`${endPoints.virtualCards}/${data.cardId}/statement?date_from=${data.date_from}&date_to=${data.date_to}`)
+    },
+
+    statementSummary(data){
+        return http().get(`${endPoints.virtualCards}/${data.cardId}/statement-summary?date_from=${data.date_from}&date_to=${data.date_to}`)
     },
 
 }

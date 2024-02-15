@@ -81,8 +81,8 @@
                                                         </button>
                                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="position:relative">
                                                             <a data-id="6" v-b-modal.cardDetails @click="setCard(card)"  class="dropdown-item approve">Details</a>
-                                                            <a data-id="6"  class="dropdown-item">Freeze</a>
-                                                            <a data-id="6"  class="dropdown-item">Terminate</a>
+                                                            <!-- <a data-id="6"  class="dropdown-item">Freeze</a>
+                                                            <a data-id="6"  class="dropdown-item">Terminate</a> -->
                                                         </div>
                                                     </div>
                                                 </td>

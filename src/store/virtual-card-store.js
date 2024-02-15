@@ -11,6 +11,8 @@ export default {
             userVirtualCards:[],
             transactions:[],
             totalCards:null,
+            cardStatement:[],
+            cardStatementSummary:null,
 
             vCardAction:null,
             vCardState:null,

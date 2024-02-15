@@ -30,6 +30,7 @@ let api = function() {
     let token = path ? localStorage.getItem("admin-befree-token") : localStorage.getItem("befree-token");
     if (token) {
         http_client.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+        http_client.defaults.headers.common["mock"] = `true`;
     }
     return http_client;
 };

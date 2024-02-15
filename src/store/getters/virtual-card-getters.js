@@ -21,6 +21,14 @@ export default {
         return state.totalCards
     },
 
+    cardStatement(state){
+        return state.cardStatement
+    },
+
+    cardStatementSummary(state){
+        return state.cardStatementSummary
+    },
+
     vCardsCurrentPage(state){
         return state.vCardsCurrentPage
     },

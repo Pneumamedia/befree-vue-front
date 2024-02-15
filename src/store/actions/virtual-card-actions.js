@@ -64,6 +64,23 @@ export default {
         }
     },
 
+    async adminCreate({commit},{ownerUUID,data}){
+        try {
+            commit('submitting',null,{root:true})
+            const res = await api.adminCreate(ownerUUID,data)
+            if(res.status==200){
+                commit('addVirtualCard',res.data.data)
+                notification.success(res.data.message)
+            }else{
+                notification.warning(res.message)
+            }
+            commit('submitted',null,{root:true})
+            return res.data
+        } catch (error) {
+            LogError(commit,error,'submitted')
+        }
+    },
+
     async getCardDetails({commit},id){
         try {
             commit('loading',null,{root:true})
@@ -202,6 +219,30 @@ export default {
             return res
         } catch (error) {
             LogError(commit,error,'submitted')
+        }
+    },
+
+    async getCardStatement({commit},data){
+        try {
+            commit('loading',null,{root:true})
+            const res = await api.statement(data)
+            commit('cardStatement',res.data.data)
+            commit('loaded',null,{root:true})
+            return res
+        } catch (error) {
+            LogError(commit,error,'loaded')
+        }
+    },
+
+    async getCardStatementSummary({commit},data){
+        try {
+            commit('loading',null,{root:true})
+            const res = await api.statementSummary(data)
+            commit('cardStatementSummary',res.data.data)
+            commit('loaded',null,{root:true})
+            return res
+        } catch (error) {
+            LogError(commit,error,'loaded')
         }
     },
 

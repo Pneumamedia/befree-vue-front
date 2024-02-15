@@ -110,7 +110,9 @@
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="position:relative">
                                                 <a data-id="6" v-b-modal.cardDetails @click="setCard(card)"  class="dropdown-item approve">Details</a>
+                                                <a data-id="6" v-b-modal.cardStatement @click="setCard(card)"  class="dropdown-item">Statement</a>
                                             </div>
+                                            
                                         </div>
                                     </td>
                                 </tr>
@@ -140,6 +142,17 @@
             <card-details v-else :card="card" @card-updated="getUserCards()"/>
         </modal>
 
+        <modal :modalId="'cardStatement'" :modalTitle="'Card Statement'" :modalSize="'xl'">
+            <template v-if="card==null">
+                <b-skeleton-table
+                    :rows="5"
+                    :columns="9"
+                    :table-props="{ bordered: true, striped: true }"
+                ></b-skeleton-table>
+            </template>
+            <card-statement v-else :card="card"/>
+        </modal>
+
         
     </div>
 </template>
@@ -157,6 +170,7 @@
     //import Connect from '@mono.co/connect.js'
     import createVirtualCard from '@/components/virtual-card/createCard.vue'
     import cardDetails from '@/components/virtual-card/cardDetails.vue'
+    import cardStatement from '@/components/virtual-card/cardStatement.vue'
     //import fundCard from '@/components/virtual-card/fundCard.vue'
     import modal from '@/components/Modal.vue'
     //import api from '../../api/payments'
@@ -169,7 +183,8 @@
             createVirtualCard,
             modal,
             cardDetails,
-            pagination
+            pagination,
+            cardStatement
         },
         data(){
             return {

@@ -75,21 +75,22 @@
                                     <th>Name</th>
                                     <th>Currency</th>
                                     <th>Card Number</th>
+                                    <th>Date</th>
                                     <th>Actions</th>
                                 </tr> 
                                 
                                 <tr v-if="vCardLoading">
-                                    <td colspan="10">
+                                    <td colspan="11">
                                         <b-skeleton-table
                                             :rows="5"
-                                            :columns="9"
+                                            :columns="11"
                                             :table-props="{ bordered: true, striped: true }"
                                         ></b-skeleton-table>
                                     </td>
                                 </tr>
                                 <template v-else>
                                     <tr v-if="virtualCards.length == 0">
-                                        <td colspan="9">There are no virtual cards</td>
+                                        <td colspan="11">There are no virtual cards</td>
                                     </tr>
                                     <tr v-else v-for="card,i in virtualCards" :key="i">
                                     <td>{{++i}}</td>
@@ -100,6 +101,7 @@
                                     <td>{{card.name_on_card}}</td>
                                     <td>{{card.currency}}</td>
                                     <td>{{card.masked_card_number}} <span @click="copyText(card)" title="copy card number" class="copy icon icon-copy blue-text"></span></td>
+                                    <td>{{card.created_at}}</td>
                                     <td>
                                         <div class="dropdown">
                                             <button class="btn btn-sm btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
